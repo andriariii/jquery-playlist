@@ -131,6 +131,17 @@
                 var nextUrl = playlist[current];
                 player.src = nextUrl;
                 player.load();
+                
+                var playPromise = player.play();
+                if (playPromise !== undefined) {
+                        playPromise.then(_ => {
+                        // here starts the playing;
+                    })
+                    .catch(error => {
+                        // ooh.. some error
+                    });
+                }
+
             }
 
             if ($.playlistOptions.navArrows) {
@@ -180,7 +191,7 @@
                 // Playlist emulation, each time a file has ended playing
                 // let's play the next one in the list.
                 if (playlist.length > 0) {
-                    $(player).bind('ended', function(e) {
+                    $(player).bind('error ended', function(e) { // if stream server error or stream ends
                         playFollowing();
                     });
                 }
